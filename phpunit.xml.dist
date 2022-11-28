@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit bootstrap="./vendor/autoload.php" color="true">
+<phpunit bootstrap="./vendor/autoload.php">
     <php>
         <ini name="xdebug.max_nesting_level" value="200" />
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
@@ -10,15 +10,4 @@
             <directory suffix="Test.php">./Tests</directory>
         </testsuite>
     </testsuites>
-
-    <filter>
-        <whitelist>
-            <directory>./</directory>
-            <exclude>
-                <directory>./Resources</directory>
-                <directory>./Tests</directory>
-                <directory>./vendor</directory>
-            </exclude>
-        </whitelist>
-    </filter>
 </phpunit>

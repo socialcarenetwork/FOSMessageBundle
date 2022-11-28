@@ -17,57 +17,44 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\Component\Routing\RouteCollectionBuilder;
+use function class_exists;
 
-/**
- * @author Guilhem N. <guilhem.niot@gmail.com>
- */
-class TestKernel extends Kernel
+abstract class BaseTestKernel extends Kernel
 {
     use MicroKernelTrait;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function registerBundles()
+    public function registerBundles(): iterable
     {
-        $bundles = array(
+        return array(
             new FrameworkBundle(),
             new SecurityBundle(),
             new TwigBundle(),
             new FOSMessageBundle(),
         );
-
-        return $bundles;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureRoutes(RouteCollectionBuilder $routes)
-    {
-        $routes->import('@FOSMessageBundle/Resources/config/routing.xml');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     protected function configureContainer(ContainerBuilder $c, LoaderInterface $loader)
     {
         $c->loadFromExtension('framework', array(
             'secret' => 'MySecretKey',
             'test' => null,
             'form' => null,
-            'templating' => array(
-                'engines' => array('twig'),
-            ),
+            'http_method_override' => false,
         ));
 
-        $c->loadFromExtension('security', array(
+        $security = array(
             'providers' => array('permissive' => array('id' => 'app.user_provider')),
-            'encoders' => array('FOS\MessageBundle\Tests\Functional\Entity\User' => 'plaintext'),
             'firewalls' => array('main' => array('http_basic' => true)),
-        ));
+        );
+
+        if (self::MAJOR_VERSION > 4) {
+            $security['password_hashers'] = array('FOS\MessageBundle\Tests\Functional\Entity\User' => 'plaintext');
+        } else {
+            $security['encoders'] = array('FOS\MessageBundle\Tests\Functional\Entity\User' => 'plaintext');
+        }
+        $c->loadFromExtension('security', $security);
 
         $c->loadFromExtension('twig', array(
             'strict_variables' => '%kernel.debug%',
@@ -90,5 +77,21 @@ class RegisteringManagersPass implements CompilerPassInterface {
     {
         $container->register('fos_message.message_manager.default', MessageManager::class);
         $container->register('fos_message.thread_manager.default', ThreadManager::class);
+    }
+}
+
+if (class_exists(RouteCollectionBuilder::class)) {
+    class TestKernel extends BaseTestKernel {
+        protected function configureRoutes(RouteCollectionBuilder $routes)
+        {
+            $routes->import('@FOSMessageBundle/Resources/config/routing.xml');
+        }
+    }
+} else {
+    class TestKernel extends BaseTestKernel {
+        protected function configureRoutes(RoutingConfigurator $routes)
+        {
+            $routes->import('@FOSMessageBundle/Resources/config/routing.xml');
+        }
     }
 }

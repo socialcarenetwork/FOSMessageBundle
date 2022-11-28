@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         operating-system: ['ubuntu-latest']
-        php-versions: ['7.4', '8.1']
+        php-versions: ['8.1']
         phpunit-versions: ['latest']
     steps:
       - name: Checkout
@@ -24,7 +24,7 @@ jobs:
           tools: phpunit:${{ matrix.phpunit-versions }}
 
       - name: Install Dependencies
-        run: composer install --no-interaction --no-suggest --prefer-dist
+        run: composer install --no-interaction --prefer-dist
 
       - name: Process the tests
         run: vendor/bin/simple-phpunit

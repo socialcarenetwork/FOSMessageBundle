@@ -1,0 +1,33 @@
+framework:
+  secret: MySecretKey
+  test: true
+  form: null
+  http_method_override: false
+
+security:
+  providers:
+    permissive:
+      id: app.user_provider
+  firewalls:
+    main:
+      http_basic: true
+  password_hashers:
+    FOS\MessageBundle\Tests\Functional\Entity\User: plaintext
+
+twig:
+  strict_variables: '%kernel.debug%'
+
+fos_message:
+  db_driver: orm
+  thread_class: FOS\MessageBundle\Tests\Functional\Entity\Thread
+  message_class: FOS\MessageBundle\Tests\Functional\Entity\Message
+
+services:
+  app.user_provider:
+    class: FOS\MessageBundle\Tests\Functional\Entity\UserProvider
+  fos_user.user_to_username_transformer:
+    class: FOS\MessageBundle\Tests\Functional\Form\UserToUsernameTransformer
+  fos_message.message_manager.default:
+    class: FOS\MessageBundle\Tests\Functional\EntityManager\MessageManager
+  fos_message.thread_manager.default:
+    class: FOS\MessageBundle\Tests\Functional\EntityManager\ThreadManager

@@ -1,0 +1,2 @@
+fos_message:
+  resource: '@FOSMessageBundle/Resources/config/routing.xml'

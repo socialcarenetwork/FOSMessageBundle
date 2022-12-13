@@ -7,7 +7,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class UserProvider implements UserProviderInterface
 {
-    public function loadUserByUsername($username)
+    public function loadUserByIdentifier(string $identifier): UserInterface
     {
         return new User();
     }
@@ -20,10 +20,5 @@ class UserProvider implements UserProviderInterface
     public function supportsClass($class)
     {
         return User::class === $class;
-    }
-
-    private function fetchUser($username)
-    {
-        return new User();
     }
 }

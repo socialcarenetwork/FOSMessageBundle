@@ -13,6 +13,8 @@
             />
         </service>
 
+        <service id="FOS\MessageBundle\ModelManager\ThreadManagerInterface" alias="fos_message.thread_manager.default" public="false"/>
+
         <service id="fos_message.sender.default" class="FOS\MessageBundle\Sender\Sender" public="false">
             <argument type="service" id="fos_message.message_manager" />
             <argument type="service" id="fos_message.thread_manager" />

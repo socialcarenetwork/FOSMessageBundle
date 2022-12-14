@@ -32,6 +32,7 @@
             <argument type="service" id="fos_message.participant_provider" />
         </service>
 
+        <service id="FOS\MessageBundle\Provider\ProviderInterface" alias="fos_message.provider.default" public="false"/>
         <service id="fos_message.provider.default" class="FOS\MessageBundle\Provider\Provider" public="false">
             <argument type="service" id="fos_message.thread_manager" />
             <argument type="service" id="fos_message.message_manager" />

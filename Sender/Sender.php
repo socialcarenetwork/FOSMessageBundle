@@ -54,6 +54,6 @@ class Sender implements SenderInterface
         $message->getThread()->setIsDeleted(false);
         $this->messageManager->saveMessage($message);
 
-        $this->dispatcher->dispatch(FOSMessageEvents::POST_SEND, new MessageEvent($message));
+        $this->dispatcher->dispatch(new MessageEvent($message, FOSMessageEvents::POST_SEND));
     }
 }

@@ -56,7 +56,7 @@ class Deleter implements DeleterInterface
         }
         $thread->setIsDeletedByParticipant($this->getAuthenticatedParticipant(), true);
 
-        $this->dispatcher->dispatch(new ThreadEvent($thread, FOSMessageEvents::POST_DELETE));
+        $this->dispatcher->dispatch(new ThreadEvent($thread), FOSMessageEvents::POST_DELETE);
     }
 
     /**
@@ -69,7 +69,7 @@ class Deleter implements DeleterInterface
         }
         $thread->setIsDeletedByParticipant($this->getAuthenticatedParticipant(), false);
 
-        $this->dispatcher->dispatch(new ThreadEvent($thread, FOSMessageEvents::POST_UNDELETE));
+        $this->dispatcher->dispatch(new ThreadEvent($thread), FOSMessageEvents::POST_UNDELETE);
     }
 
     /**
